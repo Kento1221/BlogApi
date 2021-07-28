@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ArticleRequest;
 use Illuminate\Http\Request;
 use App\Models\Article;
-use Illuminate\Support\Facades\Validator;
 
 class ArticleController extends Controller
 {
@@ -21,7 +21,7 @@ class ArticleController extends Controller
 	/**
 	 * Store a newly created resource in storage.
 	 *
-	 * @param  \Illuminate\Http\ArticleRequest  $request
+	 * @param  \App\Http\Requests\ArticleRequest  $request
 	 * @return \Illuminate\Http\Response
 	 */
 	public function store(ArticleRequest $request)
@@ -32,12 +32,12 @@ class ArticleController extends Controller
 	/**
 	 * Display the specified resource.
 	 *
-	 * @param  int  $id
+     * @param  \App\Models\Article  $article
 	 * @return \Illuminate\Http\Response
 	 */
-	public function show($id)
+	public function show(Article $article)
 	{
-		return response(Article::find($id));
+        return response($article->load('author', 'category', 'tags', 'comments', 'likes'));
 	}
 
 	/**
@@ -49,7 +49,7 @@ class ArticleController extends Controller
 	 */
 	public function update(Request $request, $id)
 	{
-		$article = Article::find($id);
+		$article = Article::findOrFail($id);
 		$article->update($request->all());
 		return response($article);
 	}
@@ -62,6 +62,8 @@ class ArticleController extends Controller
 	 */
 	public function destroy($id)
 	{
-		return response(Article::destroy($id));
+	    $article = Article::findOrFail($id);
+        $article->delete();
+		return response(['message'=>'Article deleted successfully']);
 	}
 }

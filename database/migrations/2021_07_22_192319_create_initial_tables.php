@@ -32,7 +32,7 @@ class CreateInitialTables extends Migration
             $table->morphs('likeable');
             $table->foreignId('user_id')->constrained('users', 'id');
             $table->foreignId('like_id')->constrained('likes', 'id');
-            
+
             $table->primary(['likeable_id','likeable_type', 'user_id']);
         });
 
@@ -52,6 +52,7 @@ class CreateInitialTables extends Migration
             $table->string('position')->nullable();
             $table->string('description')->nullable();
             $table->string('nickname')->unique()->nullable();
+            $table->string('avatar_url')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
@@ -69,7 +70,7 @@ class CreateInitialTables extends Migration
             $table->dateTime('published_at')->nullable();
             $table->timestamps();
         });
-        
+
         Schema::create('article_tag', function (Blueprint $table) {
             $table->foreignId('tag_id')->constrained('tags', 'id');
             $table->foreignId('article_id')->unique()->constrained('articles', 'id');

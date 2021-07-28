@@ -32,7 +32,7 @@ class ArticleRequest extends FormRequest
             'category_id' => 'required',
             'description' => 'nullable',
             'is_published' => 'nullable|boolean',
-            'published_at' =>  'nullable|date'
+            'published_at' =>  'date|required_if:is_published,1'
         ];
     }
 }

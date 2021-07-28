@@ -10,7 +10,9 @@ use Illuminate\Database\Eloquent\Model;
 class Like extends Model
 {
     use HasFactory;
+    public $timestamps = false;
     protected $table="likeables";
+    protected $fillable=['likeable_type', 'likeable_id', 'user_id', 'like_id'];
 
     public function user()
     {

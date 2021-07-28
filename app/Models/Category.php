@@ -10,10 +10,11 @@ class Category extends Model
 {
     use HasFactory;
     public $timestamps = false;
+    protected $visible = ['name'];
     protected $fillable=['name'];
 
     public function articles()
     {
-        return $this->belongsToMany(Article::class);
+        return $this->hasMany(Article::class);
     }
 }

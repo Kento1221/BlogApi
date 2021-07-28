@@ -10,6 +10,7 @@ class Tag extends Model
 {
     use HasFactory;
     public $timestamps = false;
+    protected $visible = ['name'];
     protected $fillable=['name'];
 
     public function articles()
