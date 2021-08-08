@@ -22,14 +22,13 @@ class ArticleFactory extends Factory
     public function definition()
     {
         return [
-            'author_id'=>\App\Models\Author::inRandomOrder()->first(),
+            'user_id'=>\App\Models\User::inRandomOrder()->first(),
             'slug'=>$this->faker->unique()->slug,
             'title'=>$this->faker->sentence,
             'image_url'=>'https://images.unsplash.com/photo-1624555130581-1d9cca783bc0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1051&q=80',
-            'body'=>$this->faker->sentence(3),
+            'body'=>$this->faker->sentence(5),
             'category_id'=>\App\Models\Category::inRandomOrder()->first(),
-            'is_published'=>$this->faker->boolean,
-            'published_at'=>\Illuminate\Support\Carbon::now(),
+            'published_at'=> $this->faker->boolean ? \Illuminate\Support\Carbon::now() : null,
         ];
     }
 }

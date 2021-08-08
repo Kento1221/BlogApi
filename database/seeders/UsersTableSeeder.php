@@ -16,11 +16,16 @@ class UsersTableSeeder extends Seeder
         \DB::table('users')->insert([
             'name' => 'Kamil',
             'surname' => 'Orkisz',
+            'position' => 'Laravel Developer/Student',
+            'role_id' => 1,
+            'nickname' => 'kamilorkisz',
             'email' => 'kamilorkisz@test.com',
             'password' => bcrypt('password'),
         ]);
 
-        \App\Models\User::factory()->count(15)->create();
+        \App\Models\User::factory()->count(90)->create();
+        \App\Models\User::factory()->count(8)->writer()->create();
+        \App\Models\User::factory()->count(1)->admin()->create();
 
     }
 }

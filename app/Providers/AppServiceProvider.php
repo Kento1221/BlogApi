@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
@@ -25,8 +26,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Relation::morphMap([
-            'article' => 'App\Models\Article',
-            'comment' => 'App\Models\Comment',
+            Config::get('constants.morphs.article') => 'App\Models\Article',
+            Config::get('constants.morphs.comment') => 'App\Models\Comment',
         ]);
     }
 }

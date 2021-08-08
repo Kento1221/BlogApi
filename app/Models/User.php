@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use Http\Models\Author;
-use Http\Models\Comment;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -19,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'surname', 'nickname',
+        'name', 'surname', 'nickname', 'position', 'description', 'avatar_url', 'articles_count',
         'email',
         'password',
     ];
@@ -43,13 +41,18 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function authors()
+    public function articles()
     {
-        return $this->hasMany(Author::class);
+        return $this->hasMany(Article::class);
     }
 
     public function comments()
     {
         return $this->hasMany(Comment::class);
+    }
+
+    public function setArticlesCountAttribute(int $value)
+    {
+        ($value >= 0) ? $this->attributes['articles_count'] = $value : abort(400, 'invalid value for articles_count');
     }
 }

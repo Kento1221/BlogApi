@@ -30,8 +30,8 @@ class CreateInitialTables extends Migration
 
         Schema::create('likeables', function (Blueprint $table) {
             $table->morphs('likeable');
-            $table->foreignId('user_id')->constrained('users', 'id');
-            $table->foreignId('like_id')->constrained('likes', 'id');
+            $table->foreignId('user_id')->constrained('users', 'id')->cascadeOnDelete();
+            $table->foreignId('like_id')->constrained('likes', 'id')->cascadeOnUpdate();
 
             $table->primary(['likeable_id','likeable_type', 'user_id']);
         });
@@ -39,57 +39,34 @@ class CreateInitialTables extends Migration
         Schema::create('commentables', function (Blueprint $table) {
             $table->id();
             $table->morphs('commentable');
-            $table->foreignId('user_id')->constrained('users', 'id');
+            $table->foreignId('user_id')->constrained('users', 'id')->cascadeOnDelete();
             $table->string('body');
-            $table->timestamps();
-        });
-
-        Schema::create('authors', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained('users', 'id');
-            $table->string('name');
-            $table->string('surname');
-            $table->string('position')->nullable();
-            $table->string('description')->nullable();
-            $table->string('nickname')->unique()->nullable();
-            $table->string('avatar_url')->nullable();
-            $table->boolean('is_active')->default(true);
+            $table->integer('likes_count')->default(0);
             $table->timestamps();
         });
 
         Schema::create('articles', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('author_id')->constrained('authors', 'id');
+            $table->foreignId('user_id')->constrained('users', 'id')->cascadeOnDelete();
             $table->string('slug')->unique();
             $table->string('title');
             $table->text('image_url');
             $table->string('description')->nullable();
             $table->string('body');
-            $table->foreignId('category_id')->constrained('categories', 'id');
-            $table->boolean('is_published')->default(false);
+            $table->foreignId('category_id')->nullable()->constrained('categories', 'id')->nullOnDelete();
+            $table->integer('likes_count')->default(0);
+            $table->unsignedInteger('comments_count')->default(0);
             $table->dateTime('published_at')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
 
         Schema::create('article_tag', function (Blueprint $table) {
-            $table->foreignId('tag_id')->constrained('tags', 'id');
-            $table->foreignId('article_id')->unique()->constrained('articles', 'id');
-        });
+            $table->id();
+            $table->foreignId('tag_id')->constrained('tags', 'id')->cascadeOnDelete();
+            $table->foreignId('article_id')->constrained('articles', 'id')->cascadeOnDelete();
 
-        Schema::create('article_counts', function (Blueprint $table) {
-            $table->foreignId('article_id')->constrained('articles', 'id');
-            $table->integer('comment_count')->default(0);
-            $table->integer('like_count')->default(0);
-
-            $table->primary('article_id');
-        });
-
-        Schema::create('comment_counts', function (Blueprint $table) {
-            $table->foreignId('comment_id')->constrained('commentables', 'id');
-            $table->integer('like_count')->default(0);
-
-            $table->primary('comment_id');
-
+            $table->unique(['tag_id', 'article_id']);
         });
     }
 
@@ -100,11 +77,8 @@ class CreateInitialTables extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('comment_counts');
-        Schema::dropIfExists('article_counts');
         Schema::dropIfExists('article_tag');
         Schema::dropIfExists('articles');
-        Schema::dropIfExists('authors');
         Schema::dropIfExists('commentables');
         Schema::dropIfExists('likeables');
         Schema::dropIfExists('categories');

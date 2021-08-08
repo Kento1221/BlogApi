@@ -2,13 +2,12 @@
 
 namespace App\Models;
 
-use Http\Models\User;
-use Http\Models\Article;
-use Http\Models\Like;
+use App\Models\Interfaces\Commentable;
+use App\Models\Interfaces\Likeable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Comment extends Model
+class Comment extends Model implements Likeable, Commentable
 {
     use HasFactory;
 
@@ -16,7 +15,7 @@ class Comment extends Model
 
     public function user()
     {
-        return $this->hasOne(User::class);
+        return $this->hasOne(User::class, 'id', 'user_id');
     }
 
     public function commentable()
@@ -29,16 +28,8 @@ class Comment extends Model
         return $this->morphMany(Like::class, 'likeable');
     }
 
-    public function replies()
+    public function comments()
     {
         return $this->morphMany(Comment::class, 'commentable');
-    }    
-
-    public function count()
-    {
-        return $this->hasOne(CommentCount::class)->withDefault([
-            'like_count' => 0
-            ]);
     }
-    
 }

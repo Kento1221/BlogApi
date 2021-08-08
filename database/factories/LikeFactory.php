@@ -2,17 +2,21 @@
 
 namespace Database\Factories;
 
-use App\Models\Author;
+use App\Models\Article;
+use App\Models\Comment;
+use App\Models\Like;
+use App\Models\LikeType;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class AuthorFactory extends Factory
+class LikeFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Author::class;
+    protected $model = Like::class;
 
     /**
      * Define the model's default state.
@@ -22,9 +26,8 @@ class AuthorFactory extends Factory
     public function definition()
     {
         return [
-            'user_id'=>\App\Models\User::inRandomOrder()->first(),
-            'name'=>$this->faker->firstName,
-            'surname'=>$this->faker->lastName,
+            'user_id'=>User::inRandomOrder()->first()->id,
+            'like_id'=>LikeType::inRandomOrder()->first()->id,
         ];
     }
 }

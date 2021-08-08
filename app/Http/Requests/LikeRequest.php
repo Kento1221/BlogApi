@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Validation\Rule;
 
 class LikeRequest extends FormRequest
@@ -25,10 +26,17 @@ class LikeRequest extends FormRequest
     public function rules()
     {
         return [
-            'likeable_type' => ['required', 'string', Rule::in(['article','comment'])],
+            'likeable_type' => [
+                'required',
+                'string',
+                Rule::in([
+                    Config::get('constants.morphs.article'),
+                    Config::get('constants.morphs.comment')
+                ])
+            ],
             'likeable_id' => 'required|integer',
-            'user_id'=>'required|integer',
-            'like_id'=>'required|integer'
+            'user_id' => 'required|integer',
+            'like_id' => 'required|integer'
         ];
     }
 }

@@ -17,7 +17,7 @@ class LikeTypeSeeder extends Seeder
             'type' => 'like',
         ]);
         \DB::table('likes')->insert([
-            'type' => 'dislike',
+            'type' => 'heart',
         ]);
         \DB::table('likes')->insert([
             'type' => 'sad',

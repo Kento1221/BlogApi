@@ -2,22 +2,26 @@
 
 namespace App\Models;
 
-use Http\Models;
+use App\Models\Interfaces\Commentable;
+use App\Models\Interfaces\Likeable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Article extends Model
+class Article extends Model implements Likeable, Commentable
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
-    protected $hidden=['updated_at', 'created_at', 'is_published'];
-    protected $fillable=[
-        'slug','title', 'author_id', 'image_url', 'description', 'body', 'category_id', 'is_published', 'published_at'
+    protected $hidden = [
+        'updated_at', 'created_at', 'is_published'
+    ];
+    protected $fillable = [
+        'slug', 'title', 'user_id', 'image_url', 'description', 'body', 'category_id', 'likes_count', 'comments_count', 'published_at'
     ];
 
-    public function author()
+    public function user()
     {
-        return $this->belongsTo(Author::class);
+        return $this->belongsTo(User::class);
     }
 
     public function category()

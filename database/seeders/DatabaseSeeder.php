@@ -2,6 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\Article;
+use App\Models\Comment;
+use App\Models\Like;
+use Database\Factories\CommentFactory;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -13,18 +17,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-         $this->call([
-             UsersTableSeeder::class, 
-             LikeTypeSeeder::class
-         ]);
-
-         \App\Models\Author::factory()->count(5)->create();
-         \App\Models\Tag::factory(10)->create();
-         \App\Models\Category::factory(10)->create();
-         \App\Models\Article::factory(50)->create();
-         
         $this->call([
-            ArticleTagSeeder::class
+            RoleSeeder::class,
+            UsersTableSeeder::class,
+            LikeTypeSeeder::class,
+            CategorySeeder::class,
+            TagSeeder::class,
+            ArticleSeeder::class,
+            ArticleTagSeeder::class,
+            LikesAndCommentsSeeder::class,
         ]);
+
     }
 }
