@@ -41,7 +41,6 @@ class CreateInitialTables extends Migration
             $table->morphs('commentable');
             $table->foreignId('user_id')->constrained('users', 'id')->cascadeOnDelete();
             $table->string('body');
-            $table->integer('likes_count')->default(0);
             $table->timestamps();
         });
 
@@ -54,8 +53,6 @@ class CreateInitialTables extends Migration
             $table->string('description')->nullable();
             $table->string('body');
             $table->foreignId('category_id')->nullable()->constrained('categories', 'id')->nullOnDelete();
-            $table->integer('likes_count')->default(0);
-            $table->unsignedInteger('comments_count')->default(0);
             $table->dateTime('published_at')->nullable();
             $table->softDeletes();
             $table->timestamps();

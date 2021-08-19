@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ArticleRequest;
+use App\Http\Requests\UpdateArticleRequest;
 use App\Http\Resources\ArticleResources\ArticleResource;
 use App\Http\Resources\ArticleResources\ShowArticleResource;
-use Illuminate\Http\Request;
 use App\Models\Article;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,7 +18,9 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        return ArticleResource::collection(Article::where('published_at', '!=', null)->paginate(25));
+        return ArticleResource::collection(Article::where('published_at', '!=', null)
+            ->withCount('likes', 'comments')
+            ->paginate(25));
     }
 
     /**
@@ -29,8 +31,10 @@ class ArticleController extends Controller
      */
     public function store(ArticleRequest $request)
     {
-        $request->user()->articles_count++;
-        return Article::create($request->validated());
+        $article = new Article($request->validated());
+        $article->user_id = Auth::id();
+
+        return $article->save();
     }
 
     /**
@@ -47,27 +51,35 @@ class ArticleController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param \App\Http\Requests\UpdateArticleRequest $request
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateArticleRequest $request, $id)
     {
         $article = Article::findOrFail($id);
-        $article->update($request->all());
-        return response($article);
+        return $article->update($request->validated());
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Soft delete the specified resource.
      *
      * @param \App\Models\Article $article
      * @return \Illuminate\Http\Response
      */
     public function destroy(Article $article)
     {
-        $article->user()->articles_count--;
-        $article->delete();
-        return response(['message' => 'Article deleted successfully']);
+        return $article->delete();
+    }
+
+    /**
+     * Permanently remove the specified resource from storage.
+     *
+     * @param \App\Models\Article $article
+     * @return \Illuminate\Http\Response
+     */
+    public function forceDestroy(Article $article)
+    {
+        return $article->forceDelete();
     }
 }

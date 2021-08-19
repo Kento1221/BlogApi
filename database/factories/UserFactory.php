@@ -26,7 +26,6 @@ class UserFactory extends Factory
         return [
             'name' => $this->faker->firstName(),
             'surname' => $this->faker->lastName(),
-            'nickname' => 'nick-'.$this->faker->unique()->word(),
             'description' => $this->faker->sentence(2),
             'position' => $this->faker->jobTitle(),
             'role_id' => Role::IS_USER,

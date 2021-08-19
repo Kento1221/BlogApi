@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Validation\Rule;
 
-class LikeRequest extends FormRequest
+class DestroyLikeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -15,7 +15,7 @@ class LikeRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return Auth()->check();
     }
 
     /**
@@ -26,17 +26,13 @@ class LikeRequest extends FormRequest
     public function rules()
     {
         return [
-            'likeable_type' => [
-                'required',
-                'string',
+            "likeable_type" => ['required', 'string',
                 Rule::in([
                     Config::get('constants.morphs.article'),
                     Config::get('constants.morphs.comment')
                 ])
             ],
-            'likeable_id' => 'required|integer',
-            'user_id' => 'required|integer',
-            'like_id' => 'required|integer'
+            "likeable_id" => "required|integer",
         ];
     }
 }

@@ -13,7 +13,7 @@ class Article extends Model implements Likeable, Commentable
     use HasFactory, SoftDeletes;
 
     protected $hidden = [
-        'updated_at', 'created_at', 'is_published'
+        'updated_at', 'created_at'
     ];
     protected $fillable = [
         'slug', 'title', 'user_id', 'image_url', 'description', 'body', 'category_id', 'likes_count', 'comments_count', 'published_at'

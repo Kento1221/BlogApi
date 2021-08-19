@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class UpdateUserRequest extends FormRequest
 {
@@ -13,7 +15,8 @@ class UpdateUserRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        $user = (User::class)(Auth::user());
+        return $this->user_password != null && bcrypt($this->user_password) === $user->password || $user->isAdmin();
     }
 
     /**
@@ -24,7 +27,13 @@ class UpdateUserRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'user_password' => 'required',
+            'name' => 'nullable|string|max:100',
+            'surname' => 'nullable|string|max:100',
+            'email' => 'email|nullable|unique:users',
+            'password' => 'nullable|string|confirmed',
+            'position' => 'nullable|string|max:100',
+            'description' => 'nullable|string|max:255',
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\UserResources;
 
+use App\Http\Resources\ArticleListItemResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource
@@ -22,7 +23,8 @@ class UserResource extends JsonResource
             'description' => $this->description,
             'avatar_url' => $this->avatar_url,
             'created_at' => $this->created_at,
-            'articles_count' => $this->articles_count
+            'articles_count' => $this->articles_count,
+            'articles' => ArticleListItemResource::collection($this->articles)
         ];
     }
 }

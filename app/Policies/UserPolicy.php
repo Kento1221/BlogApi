@@ -10,29 +10,6 @@ class UserPolicy
     use HandlesAuthorization;
 
     /**
-     * Determine whether the user can view any models.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function viewAny(User $user)
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can view the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\User  $model
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function view(User $user, User $model)
-    {
-        //
-    }
-
-    /**
      * Determine whether the user can create models.
      *
      * @param  \App\Models\User  $user
@@ -40,7 +17,7 @@ class UserPolicy
      */
     public function create(User $user)
     {
-        //
+        return $user == null;
     }
 
     /**
@@ -52,7 +29,7 @@ class UserPolicy
      */
     public function update(User $user, User $model)
     {
-        //
+        return $user->isAdmin() || $user->id === $model->id;
     }
 
     /**
@@ -64,7 +41,7 @@ class UserPolicy
      */
     public function delete(User $user, User $model)
     {
-        //
+        return $user->isAdmin() || $user->id === $model->id;
     }
 
     /**
@@ -76,7 +53,7 @@ class UserPolicy
      */
     public function restore(User $user, User $model)
     {
-        //
+        return $user->isAdmin() || $user->id === $model->id;
     }
 
     /**
@@ -88,6 +65,6 @@ class UserPolicy
      */
     public function forceDelete(User $user, User $model)
     {
-        //
+        return $user->isAdmin() || $user->id === $model->id;
     }
 }

@@ -26,7 +26,7 @@ class LikesAndCommentsSeeder extends Seeder
      */
     public function run()
     {
-        $timestamp =  now()->toDateTimeString();
+        $timestamp = now()->toDateTimeString();
         $likes = [];
         $comments = [];
         $likeables = Article::all(['id']);
@@ -38,23 +38,27 @@ class LikesAndCommentsSeeder extends Seeder
                 'user_id' => User::inRandomOrder()->first()->id,
                 'like_id' => LikeType::inRandomOrder()->first()->id,
             ];
-            $comments[] = [
-                'commentable_type' => 'article',
-                'commentable_id' => $item['id'],
-                'user_id' => User::inRandomOrder()->first()->id,
-                'body' => $this->faker->sentence,
-                'created_at' => $timestamp,
-                'updated_at' => $timestamp,
-            ];
+
+            $rand = rand(1, 3);
+            for ($i = 0; $i < $rand; $i++) {
+                $comments[] = [
+                    'commentable_type' => 'article',
+                    'commentable_id' => $item['id'],
+                    'user_id' => User::inRandomOrder()->first()->id,
+                    'body' => $this->faker->sentence,
+                    'created_at' => $timestamp,
+                    'updated_at' => $timestamp,
+                ];
+            }
         }
         Like::insert($likes);
         Comment::insert($comments);
 
         $likes = [];
-        $comments = [];
         $likeables = Comment::all(['id']);
 
         foreach ($likeables as $item) {
+
             $likes[] = [
                 'likeable_type' => 'comment',
                 'likeable_id' => $item['id'],
@@ -62,16 +66,8 @@ class LikesAndCommentsSeeder extends Seeder
                 'like_id' => LikeType::inRandomOrder()->first()->id,
             ];
 
-            $comments[] = [
-                'commentable_type' => 'comment',
-                'commentable_id' => $item['id'],
-                'user_id' => User::inRandomOrder()->first()->id,
-                'body' => $this->faker->sentence,
-                'created_at' => $timestamp,
-                'updated_at' => $timestamp,
-            ];
         }
-            Like::insert($likes);
-            Comment::insert($comments);
+
+        Like::insert($likes);
     }
 }

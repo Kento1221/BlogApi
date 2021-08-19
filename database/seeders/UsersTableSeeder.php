@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Role ;
 use Illuminate\Database\Seeder;
 
 class UsersTableSeeder extends Seeder
@@ -17,8 +18,7 @@ class UsersTableSeeder extends Seeder
             'name' => 'Kamil',
             'surname' => 'Orkisz',
             'position' => 'Laravel Developer/Student',
-            'role_id' => 1,
-            'nickname' => 'kamilorkisz',
+            'role_id' => Role::IS_ADMIN,
             'email' => 'kamilorkisz@test.com',
             'password' => bcrypt('password'),
         ]);

@@ -3,8 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
-class ArticleRequest extends FormRequest
+class AuthLoginRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +14,7 @@ class ArticleRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return !Auth::check() && $this->bearerToken() == null;
     }
 
     /**
@@ -24,13 +25,8 @@ class ArticleRequest extends FormRequest
     public function rules()
     {
         return [
-            'slug' => 'required|unique:articles|max:255',
-            'title' => 'required',
-            'image_url' => 'required',
-            'body' => 'required',
-            'category_id' => 'required',
-            'description' => 'nullable',
-            'published_at' =>  'date|required_if:is_published,1'
+            'email' => 'required|email',
+            'password' => 'required'
         ];
     }
 }
