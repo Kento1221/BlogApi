@@ -4,6 +4,7 @@ use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\UnpublishedArticleController;
+use App\Http\Controllers\UserAvatarController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CategoryArticlesController;
 use App\Http\Controllers\ArticleCommentController;
@@ -43,17 +44,19 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::delete('/comment/{comment:id}', [CommentController::class, 'destroy']);
 
 
-    Route::group(['as' => 'user.'], function () {
+    Route::group(['as' => 'user.', 'prefix' => 'user'], function () {
 
-        Route::get('logout', [AuthController::class, 'logout'])->name('logout');
-        Route::get('logout-all', [AuthController::class, 'logoutAllDevices'])->name('logout-all');
+        Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+        Route::get('/logout-all', [AuthController::class, 'logoutAllDevices'])->name('logout-all');
 
         Route::post('/like', [LikeController::class, 'update'])->name('like.update');
         Route::delete('/like', [LikeController::class, 'destroy'])->name('like.destroy');
+
+        Route::apiResource('/avatar', UserAvatarController::class)->only(['store', 'update', 'destroy']);
     });
 
     //Admin routes
-    Route::group(['as' => 'admin.'], function () {
+    Route::group(['as' => 'admin.', 'prefix' => 'admin'], function () {
 
         Route::apiResource('/users', UserController::class)->except('store');
         Route::delete('users/force-delete/{id}', [UserController::class, 'forceDestroy'])->name('users.force-delete');
