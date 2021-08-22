@@ -73,6 +73,17 @@ class ArticleController extends Controller
     }
 
     /**
+     * Soft delete the specified resource.
+     *
+     * @param \App\Models\Article $article
+     * @return \Illuminate\Http\Response
+     */
+    public function restore(Article $article)
+    {
+        return $article->restore();
+    }
+
+    /**
      * Permanently remove the specified resource from storage.
      *
      * @param \App\Models\Article $article

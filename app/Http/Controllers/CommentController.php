@@ -10,7 +10,7 @@ use Illuminate\Validation\Rule;
 
 class CommentController extends Controller
 {
-
+//TODO: form validate the class
     /**
      * Update the resource or create it if it doesn't exist in storage.
      *
@@ -59,6 +59,6 @@ class CommentController extends Controller
      */
     public function destroy(Comment $comment)
     {
-        return $comment->delete();;
+        return $comment->delete();
     }
 }

@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\ArticleApprovalController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\DisapprovedArticleController;
 use App\Http\Controllers\UnpublishedArticleController;
 use App\Http\Controllers\UserAvatarController;
 use App\Http\Controllers\UserController;
@@ -10,6 +12,7 @@ use App\Http\Controllers\CategoryArticlesController;
 use App\Http\Controllers\ArticleCommentController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\TagController;
+use App\Http\Controllers\WriterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,22 +24,28 @@ Route::apiResource('/articles', ArticleController::class)->only(['index', 'show'
 
 //Articles assigned to category
 Route::get('/articles/category/{category:name}', CategoryArticlesController::class)->name('articles.byCategory');
-//Unpublished Article
-Route::put('articles/{article}/publish', [UnpublishedArticleController::class, 'update']);
-Route::post('articles/{id}/restore', [UnpublishedArticleController::class, 'restore']);
-Route::delete('articles/{article}/destroy', [UnpublishedArticleController::class, 'destroy']);
+
 //Article tags
 Route::get('/tags/{tag_name?}', [TagController::class, 'index']);
 Route::apiResource('/tags', TagController::class); //TODO: finish the controller
 
 //Article Counts
-Route::get('/article/{article}/likes-count', \App\Http\Controllers\ArticleLikesCountController::class);
-Route::get('/article/{article}/comments-count', \App\Http\Controllers\ArticleCommentsCountController::class);
+Route::get('/article/{article:slug}/likes-count', \App\Http\Controllers\ArticleLikesCountController::class);
+Route::get('/article/{article:slug}/comments-count', \App\Http\Controllers\ArticleCommentsCountController::class);
 
+
+Route::apiResource('/authors', WriterController::class)->only(['index', 'show']);
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
     //User routes
     Route::apiResource('/articles', ArticleController::class)->only(['store', 'update', 'destroy']);
+
+    //Unpublished Article
+    Route::put('articles/{article}/publish', [UnpublishedArticleController::class, 'update']);
+    Route::post('articles/{id}/restore', [UnpublishedArticleController::class, 'restore']);
+    Route::delete('articles/{article}/destroy', [UnpublishedArticleController::class, 'destroy']);
+    //Disapproved Article
+    Route::post('articles/{article}/publish/renew', DisapprovedArticleController::class);
 
     //Comment routes
     Route::post('/article/{article:slug}/comment', [CommentController::class, 'store']);
@@ -57,6 +66,9 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
     //Admin routes
     Route::group(['as' => 'admin.', 'prefix' => 'admin'], function () {
+
+        //Approval of article
+        Route::apiResource('/articles/to-approval', ArticleApprovalController::class);
 
         Route::apiResource('/users', UserController::class)->except('store');
         Route::delete('users/force-delete/{id}', [UserController::class, 'forceDestroy'])->name('users.force-delete');

@@ -54,6 +54,7 @@ class CreateInitialTables extends Migration
             $table->string('body');
             $table->foreignId('category_id')->nullable()->constrained('categories', 'id')->nullOnDelete();
             $table->dateTime('published_at')->nullable();
+            $table->boolean('is_approved')->default(false);
             $table->softDeletes();
             $table->timestamps();
         });
