@@ -8,6 +8,7 @@ use App\Http\Resources\ArticleResources\ArticleResource;
 use App\Http\Resources\ArticleResources\ShowArticleResource;
 use App\Models\Article;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ArticleController extends Controller
 {
@@ -91,6 +92,7 @@ class ArticleController extends Controller
      */
     public function forceDestroy(Article $article)
     {
+        Storage::delete($article->image_url);
         return $article->forceDelete();
     }
 }

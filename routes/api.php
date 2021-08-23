@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ArticleApprovalController;
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\ArticleImageController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\DisapprovedArticleController;
@@ -52,6 +53,9 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::put('/comment/{comment:id}', [CommentController::class, 'update']);
     Route::delete('/comment/{comment:id}', [CommentController::class, 'destroy']);
 
+    //Images
+    Route::post('/article/{article:slug}/image', [ArticleImageController::class, 'store']);
+    Route::post('/article/{article:slug}/image/replace', [ArticleImageController::class, 'update']);
 
     Route::group(['as' => 'user.', 'prefix' => 'user'], function () {
 

@@ -43,4 +43,9 @@ class Article extends Model implements Likeable, Commentable
     {
         return $this->morphMany(Like::class, 'likeable');
     }
+
+    public function setImageUrlAttribute($value)
+    {
+        return $this->attributes['image_url'] = $value;
+    }
 }
